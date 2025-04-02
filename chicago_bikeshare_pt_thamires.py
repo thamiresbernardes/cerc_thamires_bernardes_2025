@@ -3,7 +3,7 @@
 # Começando com os imports
 import csv
 import matplotlib.pyplot as plt
-from collections import Counter
+from collections import Counter # importando para checagem extra
 
 # Vamos ler os dados como uma lista
 print("Lendo o documento...")
@@ -11,6 +11,7 @@ with open("chicago.csv", "r") as file_read:
     reader = csv.reader(file_read)
     data_list = list(reader)
 print("Ok!")
+
 # Só pra eu garantir que veio linhas corretamente (TB)
 print(data_list[0:10])
 
@@ -50,9 +51,8 @@ input("Aperte Enter para continuar...")
 # TODO: Imprima o `gênero` das primeiras 20 linhas
 
 def imprimir_coluna_6(data_list):
-    # Imprime a sexta coluna dos primeiros 20 registros
     for i in range(min(20, len(data_list))):  
-        print(data_list[i][6]) # Imprime o elemento da sexta coluna para cada linha
+        print(data_list[i][6]) # Imprime o elemento da sétima coluna para cada linha
 
 print("\nTAREFA 2: Imprimindo o gênero das primeiras 20 amostras")
 imprimir_coluna_6(data_list)
@@ -64,9 +64,25 @@ imprimir_coluna_6(data_list)
 input("Aperte Enter para continuar...")
 # TAREFA 3
 # TODO: Crie uma função para adicionar as colunas(features) de uma lista em outra lista, na mesma ordem
-def column_to_list(data, index):
+
+def column_to_list(data_list, index):
     column_list = []
-    # Dica: Você pode usar um for para iterar sobre as amostras, pegar a feature pelo seu índice, e dar append para uma lista
+    # Verifica se a lista não está vazia
+    if not data_list:
+        return column_list
+
+    # Obtendo o numero de colunas checando a primeira linha
+    num_colunas = len(data_list[0])
+
+    # Itera sobre cada linha da lista de dados
+    for linha in data_list:
+        # Verifica se a linha possui colunas suficientes
+        if len(linha) > index:
+            # Adiciona o elemento da coluna à nova lista
+            column_list.append(linha[index])
+        else:
+            column_list.append(None)  # Garantindo valor nulo se a coluna não exister na linha 
+
     return column_list
 
 
@@ -106,6 +122,7 @@ input("Aperte Enter para continuar...")
 # TAREFA 5
 # TODO: Crie uma função para contar os gêneros. Retorne uma lista.
 # Isso deveria retornar uma lista com [count_male, count_female] (exemplo: [10, 15] significa 10 Masculinos, 15 Femininos)
+
 def count_gender(data_list):
     male = 0
     female = 0
@@ -113,7 +130,7 @@ def count_gender(data_list):
     for row in data_list:
         #Acessando o item desejado pelo index para cada linha
         gender = row[-2]
-        
+        #Itera sobre a lista contando cada tipo de genero apresentado
         if gender == 'Male':
             male += 1
         elif gender == 'Female':
@@ -137,6 +154,24 @@ input("Aperte Enter para continuar...")
 # TODO: Crie uma função que pegue o gênero mais popular, e retorne este gênero como uma string.
 # Esperamos ver "Male", "Female", ou "Equal" como resposta.
 
+# Criei duas funções aqui: uma que usa a função criada acima e outra pra checar usando a biblitoeca importada 
+
+# Usando a funcao count_gender
+
+def most_popular_gender(data_list):
+
+    # Uando a função criada na tarefa 05
+    male_count, female_count = count_gender(data_list)
+
+    # Comparando os resultados pra saber qual é mais comum
+    if male_count > female_count:
+        return "Male"
+    elif female_count > male_count:
+        return "Female"
+    else:
+        return "Equal"
+
+# Usando a bilbioteca
 
 def most_popular_gender(data_list):
     # Tô usando a biblioteca acima apresentada para retornar os mesmos valores da tarefa 5
@@ -147,7 +182,6 @@ def most_popular_gender(data_list):
         return "Equal"
     else:
         return most_common_gender
-
 
 print("\nTAREFA 6: Qual é o gênero mais popular na lista?")
 print("O gênero mais popular na lista é: ", most_popular_gender(data_list))
@@ -174,17 +208,17 @@ input("Aperte Enter para continuar...")
 # TODO: Crie um gráfico similar para user_types. Tenha certeza que a legenda está correta.
 
 # Para criar o gráfico eu precisei checar algumas coisas
-# TODO: Checando informações da coluna
+
+# Checando os retornos das colunas
 user_types = Counter(column_to_list(data_list, -3))
 print(user_types)
 
-# Criando uma função que retorna as quantidades
+# Criando uma função que retorna as quantidades usando o mesmo padrao da count_gender
 def count_user(data_list):
     Subscriber = 0
     Customer = 0
     Dependent = 0
 
-    # Iterate through each row of data
     for row in data_list:
         user_type= row[-3]
         
@@ -225,17 +259,20 @@ assert answer != "Escreva sua resposta aqui.", "TAREFA 8: Escreva sua própria r
 input("Aperte Enter para continuar...")
 # Vamos trabalhar com trip_duration (duração da viagem) agora. Não conseguimos tirar alguns valores dele.
 # TAREFA 9
-# TODO: Ache a duração de viagem Mínima, Máxima, Média, e Mediana.
-# Você não deve usar funções prontas para isso, como max() e min().
 
+# TODO: Ache a duração de viagem Mínima, Máxima, Média, e Mediana.
+#  Você não deve usar funções prontas para isso, como max() e min().
+
+# Armazenando todas durações das viagens registradas em uma variável
 trip_duration_list = column_to_list(data_list, 2)
 
 def calcular_estatisticas(trip_duration_list):
-    # Convert elements of trip_duration_list to integers
+    # Convertendo os campos para inteiro
     trip_duration_list = [int(item) for item in trip_duration_list]
 
-    minimo = float('inf')  # Initialize minimo with a very large value
-    maximo = float('-inf') # Initialize maximo with a very small value
+    # Atribuindo um valor gigante e minusculo para que seja o inicio da análise
+    minimo = float('inf')  
+    maximo = float('-inf') 
     soma = 0
     n = len(trip_duration_list)
 
@@ -247,20 +284,22 @@ def calcular_estatisticas(trip_duration_list):
             maximo = numero
         soma += numero
 
-    # Calculando a média
+    # Calculando a média, que nada mais é que a soma dos valores dividido pela quantidade de iterações que tivemos
     media = soma / n
 
     # Calculando a mediana
+    # Para isso precisamos ordenar os dados, usei a função sorted que já existe (pega uma lista e retorna uma nova lista os elementos em ordem classificada)
+    # Se n for par, a mediana é a média dos dois valores do meio, se for ímpar, a mediana é o valor do meio.
+
     lista_ordenada = sorted(trip_duration_list)
     if n % 2 == 0:
         mediana = (lista_ordenada[n // 2 - 1] + lista_ordenada[n // 2]) / 2
     else:
         mediana = lista_ordenada[n // 2]
-
     return minimo, maximo, media, mediana
 
 resultado = calcular_estatisticas(trip_duration_list)
-minimo, maximo, media, mediana = resultado  # Unpack the returned values into variables
+minimo, maximo, media, mediana = resultado  
 print("Min: ", minimo, "Max: ", maximo, "Média: ", media, "Mediana: ", mediana)
 
 
@@ -276,6 +315,7 @@ input("Aperte Enter para continuar...")
 # Gênero é fácil porque nós temos apenas algumas opções. E quanto a start_stations? Quantas opções ele tem?
 # TODO: Verifique quantos tipos de start_stations nós temos, usando set()
 
+# o set basicamente remove duplicadas e nos informaquais registros exclusivos
 start_stations = set(column_to_list(data_list, 3))
 
 print("\nTAREFA 10: Imprimindo as start stations:")
@@ -308,17 +348,16 @@ input("Aperte Enter para continuar...")
 print("Você vai encarar o desafio? (yes ou no)")
 answer = "yes"
 
+
 def count_items(column_list):
-    item_types = set()
-    item_counts = []
-    
-    # Iterate over each item in the column_list
+    item_types = set() # usando set para pegarmos os itens unicos de cada index
+    item_counts = [] # usando lista para armazernarmos as quantidades
+
     for item in column_list:
-        item_types.add(item)  
+        item_types.add(item)  # Adicionando cada iteracao no item_types
     
-    # Create a list of counts for each unique type
     for item_type in item_types:
-        item_counts.append(column_list.count(item_type))
+        item_counts.append(column_list.count(item_type)) # Contando as recorrencias dos itens acima iterados
     
     return list(item_types), item_counts
 
@@ -330,3 +369,4 @@ def count_items(column_list):
     assert len(types) == 3, "TAREFA 12: Há 3 tipos de gênero!"
     assert sum(counts) == 1048575, "TAREFA 12: Resultado de retorno incorreto!"
 # -----------------------------------------------------
+if answer == "yes":
