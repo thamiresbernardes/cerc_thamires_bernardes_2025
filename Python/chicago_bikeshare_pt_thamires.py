@@ -270,37 +270,34 @@ def calcular_estatisticas(trip_duration_list):
     # Convertendo os campos para inteiro
     trip_duration_list = [int(item) for item in trip_duration_list]
 
-    # Atribuindo um valor gigante e minusculo para que seja o inicio da análise
-    minimo = float('inf')  
-    maximo = float('-inf') 
+    min_trip = float('inf')  # Atribuindo um valor gigante, ou seja infinito
+    max_trip = float('-inf') # Atribuindo um valor minusculo, ou seja menos infinito
     soma = 0
     n = len(trip_duration_list)
 
     # Iterando sobre a lista para calcular mínimo, máximo e soma
     for numero in trip_duration_list:
-        if numero < minimo:
-            minimo = numero
-        if numero > maximo:
-            maximo = numero
+        if numero < min_trip:
+            min_trip = numero
+        if numero > max_trip:
+            max_trip = numero
         soma += numero
 
     # Calculando a média, que nada mais é que a soma dos valores dividido pela quantidade de iterações que tivemos
-    media = soma / n
+    mean_trip = soma / n
 
     # Calculando a mediana
     # Para isso precisamos ordenar os dados, usei a função sorted que já existe (pega uma lista e retorna uma nova lista os elementos em ordem classificada)
-    # Se n for par, a mediana é a média dos dois valores do meio, se for ímpar, a mediana é o valor do meio.
-
     lista_ordenada = sorted(trip_duration_list)
     if n % 2 == 0:
-        mediana = (lista_ordenada[n // 2 - 1] + lista_ordenada[n // 2]) / 2
+        mean_trip = (lista_ordenada[n // 2 - 1] + lista_ordenada[n // 2]) / 2
     else:
-        mediana = lista_ordenada[n // 2]
-    return minimo, maximo, media, mediana
+        median_trip = lista_ordenada[n // 2]
+    return min_trip, max_trip, mean_trip, median_trip
 
 resultado = calcular_estatisticas(trip_duration_list)
-minimo, maximo, media, mediana = resultado  
-print("Min: ", minimo, "Max: ", maximo, "Média: ", media, "Mediana: ", mediana)
+min_trip, max_trip, mean_trip, median_trip = resultado  
+print("Min: ", min_trip, "Max: ", max_trip, "Média: ", mean_trip, "Mediana: ", median_trip)
 
 
 # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
@@ -346,8 +343,6 @@ input("Aperte Enter para continuar...")
 # para que nós possamos usar essa função com outra categoria de dados.
 
 print("Você vai encarar o desafio? (yes ou no)")
-answer = "yes"
-
 
 def count_items(column_list):
     item_types = set() # usando set para pegarmos os itens unicos de cada index
@@ -362,11 +357,10 @@ def count_items(column_list):
     return list(item_types), item_counts
 
 # ------------ NÃO MUDE NENHUM CÓDIGO AQUI ------------
-    column_list = column_to_list(data_list, -2)
-    types, counts = count_items(column_list)
-    print("\nTAREFA 12: Imprimindo resultados para count_items()")
-    print("Tipos:", types, "Counts:", counts)
-    assert len(types) == 3, "TAREFA 12: Há 3 tipos de gênero!"
-    assert sum(counts) == 1048575, "TAREFA 12: Resultado de retorno incorreto!"
+column_list = column_to_list(data_list, -2)
+types, counts = count_items(column_list)
+print("\nTAREFA 12: Imprimindo resultados para count_items()")
+print("Tipos:", types, "Counts:", counts)
+assert len(types) == 3, "TAREFA 12: Há 3 tipos de gênero!"
+assert sum(counts) == 1048575, "TAREFA 12: Resultado de retorno incorreto!"
 # -----------------------------------------------------
-if answer == "yes":
