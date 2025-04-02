@@ -52,7 +52,7 @@ input("Aperte Enter para continuar...")
 def imprimir_coluna_6(data_list):
     # Imprime a sexta coluna dos primeiros 20 registros
     for i in range(min(20, len(data_list))):  
-        print(data_list[i][6]) # Imprime o elemnto da sexta coluna para cada linha
+        print(data_list[i][6]) # Imprime o elemento da sexta coluna para cada linha
 
 print("\nTAREFA 2: Imprimindo o gênero das primeiras 20 amostras")
 imprimir_coluna_6(data_list)
